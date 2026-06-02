@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
 import ImageField from '@/components/admin/ImageField'
+import { Trash2 } from 'lucide-react'
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState<any[]>([])
@@ -61,28 +62,28 @@ export default function AdminBlog() {
 
   return (
     <div>
-      <div className="mb-6 flex justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold">Blog Posts</h1>
-        <Button className="bg-primary text-white" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : 'New Post'}
+        <Button className="w-full bg-primary text-white sm:w-auto" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : '+ New Post'}
         </Button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="mb-6 space-y-4 rounded-xl border bg-white p-6 shadow-sm">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="mb-6 w-full space-y-4 rounded-xl border bg-white p-4 shadow-sm sm:p-6">
+          <div className="grid gap-3 grid-cols-1 sm:gap-4 sm:grid-cols-2">
             <div>
               <Label>Title *</Label>
-              <Input {...register('title', { required: true })} className="mt-1" />
+              <Input {...register('title', { required: true })} className="mt-1 text-base" />
             </div>
             <div>
               <Label>Slug *</Label>
-              <Input {...register('slug', { required: true })} className="mt-1" />
+              <Input {...register('slug', { required: true })} className="mt-1 text-base" />
             </div>
           </div>
           <div>
             <Label>Excerpt</Label>
-            <Input {...register('excerpt')} className="mt-1" />
+            <Input {...register('excerpt')} className="mt-1 text-base" />
           </div>
           <input type="hidden" {...register('image')} />
           <ImageField
@@ -92,47 +93,98 @@ export default function AdminBlog() {
           />
           <div>
             <Label>Content *</Label>
-            <Textarea {...register('content', { required: true })} className="mt-1" rows={6} />
+            <Textarea {...register('content', { required: true })} className="mt-1 text-base" rows={6} />
           </div>
-          <div>
-            <Label>Status</Label>
-            <Select value={watch('status')} onValueChange={(v) => setValue('status', v)}>
-              <SelectTrigger className="mt-1 w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+            <div>
+              <Label>Status</Label>
+              <Select value={watch('status')} onValueChange={(v) => setValue('status', v)}>
+                <SelectTrigger className="mt-1 sm:w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="published">Published</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full bg-primary text-white sm:w-auto">Publish / Save</Button>
           </div>
-          <Button type="submit" className="bg-primary text-white">Publish / Save</Button>
         </form>
       )}
 
-      <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {posts.map((p) => (
-              <TableRow key={p._id}>
-                <TableCell className="font-medium">{p.title}</TableCell>
-                <TableCell>
-                  <Badge variant={p.status === 'published' ? 'default' : 'secondary'}>{p.status}</Badge>
-                </TableCell>
-                <TableCell>
-                  <Button size="sm" variant="destructive" onClick={() => deletePost(p._id)}>Delete</Button>
-                </TableCell>
+      {/* Mobile: Card View */}
+      <div className="grid gap-3 sm:hidden">
+        {posts.map((post) => (
+          <div key={post._id} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="mb-2 flex items-start justify-between gap-2">
+              <h3 className="font-semibold text-slate-900 flex-1">{post.title}</h3>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-red-600 hover:bg-red-50 flex-shrink-0"
+                onClick={() => deletePost(post._id)}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-slate-600">Status:</span>
+                <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                  {post.status}
+                </Badge>
+              </div>
+              {post.excerpt && (
+                <p className="text-slate-600 line-clamp-2">{post.excerpt}</p>
+              )}
+            </div>
+          </div>
+        ))}
+        {posts.length === 0 && (
+          <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-slate-500">
+            No posts yet
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Table View */}
+      <div className="hidden overflow-hidden rounded-xl border bg-white shadow-sm sm:block">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {posts.map((post) => (
+                <TableRow key={post._id}>
+                  <TableCell className="font-medium">{post.title}</TableCell>
+                  <TableCell>
+                    <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                      {post.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="flex justify-end gap-2">
+                    <Button size="sm" variant="destructive" onClick={() => deletePost(post._id)}>
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {posts.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center text-slate-500">
+                    No posts yet
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   )

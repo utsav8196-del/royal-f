@@ -79,16 +79,18 @@ export default function CourseForm() {
   }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">{isEdit ? 'Edit Course' : 'Add Course'}</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold sm:text-3xl">{isEdit ? 'Edit Course' : 'Add Course'}</h1>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         <div>
           <Label>Title</Label>
-          <Input {...register('title')} className="mt-1" />
+          <Input {...register('title')} className="mt-1 text-base" />
         </div>
         <div>
           <Label>Slug</Label>
-          <Input {...register('slug')} className="mt-1" placeholder="jee-main-advanced" />
+          <Input {...register('slug')} className="mt-1 text-base" placeholder="jee-main-advanced" />
         </div>
         <div>
           <Label>Category</Label>
@@ -103,14 +105,14 @@ export default function CourseForm() {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
           <div>
             <Label>Duration</Label>
-            <Input {...register('duration')} className="mt-1" />
+            <Input {...register('duration')} className="mt-1 text-base" />
           </div>
           <div>
             <Label>Fee</Label>
-            <Input {...register('fee')} className="mt-1" />
+            <Input {...register('fee')} className="mt-1 text-base" />
           </div>
         </div>
         <input type="hidden" {...register('image')} />
@@ -122,18 +124,18 @@ export default function CourseForm() {
         />
         <div>
           <Label>Description</Label>
-          <Textarea {...register('description')} className="mt-1" rows={4} />
+          <Textarea {...register('description')} className="mt-1 text-base" rows={4} />
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="flex items-center gap-3 rounded-lg border border-slate-200 p-4">
-            <input type="checkbox" id="featured" {...register('featured')} className="h-4 w-4" />
-            <Label htmlFor="featured" className="cursor-pointer">
+        <div className="flex flex-col gap-3 sm:gap-4 sm:items-end">
+          <div className="flex items-center gap-3 rounded-lg border border-slate-200 p-4 w-full">
+            <input type="checkbox" id="featured" {...register('featured')} className="h-4 w-4 flex-shrink-0" />
+            <Label htmlFor="featured" className="cursor-pointer text-sm sm:text-base">
               Show in <strong>Popular Courses</strong> on home page
             </Label>
           </div>
-          <div>
+          <div className="w-full sm:w-40">
             <Label>Home display order</Label>
-            <Input type="number" {...register('homeOrder')} className="mt-1" />
+            <Input type="number" {...register('homeOrder')} className="mt-1 text-base" />
           </div>
         </div>
         <div>
