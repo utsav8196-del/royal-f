@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { motion } from 'framer-motion'
-import { BookOpen, Target, Users, Trophy, GraduationCap, CheckCircle } from 'lucide-react'
+import { BookOpen, Target, Trophy, GraduationCap, CheckCircle } from 'lucide-react'
 import AnimatedSection from '@/components/public/AnimatedSection'
 import AnimatedCounter from '@/components/public/AnimatedCounter'
 import TeamCard from '@/components/public/TeamCard'

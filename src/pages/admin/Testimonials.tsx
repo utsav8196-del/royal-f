@@ -20,7 +20,16 @@ export default function AdminTestimonials() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const { register, handleSubmit, reset, setValue, watch } = useForm({
-    defaultValues: { status: 'active', showOnHome: true, rating: 5, homeOrder: 0 },
+    defaultValues: { 
+      status: 'active', 
+      showOnHome: true, 
+      rating: 5, 
+      homeOrder: 0,
+      name: '',
+      role: '',
+      message: '',
+      image: '',
+    },
   })
 
   const fetchItems = () =>

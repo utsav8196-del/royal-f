@@ -14,7 +14,7 @@ import { Loader2 } from 'lucide-react'
 export default function Settings() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const { register, handleSubmit, reset, control, setValue, watch } = useForm()
+  const { register, handleSubmit, reset, setValue, watch } = useForm()
 
   useEffect(() => {
     api.get('/settings')

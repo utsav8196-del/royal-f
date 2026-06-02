@@ -29,9 +29,9 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 Select.displayName = "Select"
 
 const SelectTrigger = Select  // alias for compatibility
-const SelectValue = ({ placeholder }: { placeholder?: string }) => null // not needed with native select, we'll just use <option>
+const SelectValue = () => null // not needed with native select, we'll just use <option>
 
-const SelectContent = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+const SelectContent = ({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 )
 

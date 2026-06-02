@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
@@ -19,7 +18,13 @@ export default function AdminGallery() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const { register, handleSubmit, reset, setValue, watch } = useForm({
-    defaultValues: { status: 'active', category: 'general', order: 0 },
+    defaultValues: { 
+      status: 'active', 
+      category: 'general', 
+      order: 0,
+      title: '',
+      url: '',
+    },
   })
 
   const fetchItems = () =>

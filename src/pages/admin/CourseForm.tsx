@@ -24,7 +24,7 @@ const schema = z.object({
   fee: z.string().optional(),
   image: z.string().optional(),
   description: z.string().optional(),
-  status: z.enum(['active', 'inactive']).default('active'),
+  status: z.enum(['active', 'inactive']).optional().default('active'),
   featured: z.boolean().optional(),
   homeOrder: z.coerce.number().optional(),
 })
@@ -38,7 +38,7 @@ export default function CourseForm() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(isEdit)
   const [submitting, setSubmitting] = useState(false)
-  const { register, handleSubmit, setValue, reset, watch } = useForm<FormData>({
+  const { register, handleSubmit, setValue, reset, watch } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { status: 'active', featured: false, homeOrder: 0 },
   })
@@ -52,7 +52,7 @@ export default function CourseForm() {
     }
   }, [id, isEdit, reset])
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: any) => {
     setSubmitting(true)
     try {
       if (isEdit && id) {

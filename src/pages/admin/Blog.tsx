@@ -16,7 +16,16 @@ export default function AdminBlog() {
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const { register, handleSubmit, reset, setValue, watch } = useForm({ defaultValues: { status: 'draft' } })
+  const { register, handleSubmit, reset, setValue, watch } = useForm({ 
+    defaultValues: { 
+      status: 'draft',
+      title: '',
+      slug: '',
+      excerpt: '',
+      image: '',
+      content: ''
+    } 
+  })
 
   const fetch = () =>
     api.get('/blog/manage/all')
