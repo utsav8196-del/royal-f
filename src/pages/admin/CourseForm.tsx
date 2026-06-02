@@ -29,8 +29,6 @@ const schema = z.object({
   homeOrder: z.coerce.number().optional(),
 })
 
-type FormData = z.infer<typeof schema>
-
 export default function CourseForm() {
   const { user, loading: authLoading } = useAuth()
   const { id } = useParams()
@@ -96,7 +94,7 @@ export default function CourseForm() {
           <Label>Category</Label>
           <Select value={watch('category') || ''} onValueChange={(val) => setValue('category', val)}>
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select category" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="jee">JEE</SelectItem>

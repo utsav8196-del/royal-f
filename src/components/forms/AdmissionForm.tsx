@@ -91,7 +91,7 @@ export default function AdmissionForm() {
             <Label>Preferred Course</Label>
             <Select onValueChange={(val) => setValue('course', val)}>
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Select course" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="jee">JEE</SelectItem>
