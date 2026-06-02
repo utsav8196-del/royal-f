@@ -77,17 +77,17 @@ export default function Settings() {
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <Label>Phone</Label>
-            <Input {...register('phone')} className="mt-1" />
+            <Label>Footer Phone</Label>
+            <Input {...register('phone')} className="mt-1" placeholder="+91 9876543210" />
           </div>
           <div>
-            <Label>Email</Label>
-            <Input {...register('email')} className="mt-1" />
+            <Label>Footer Email</Label>
+            <Input {...register('email')} className="mt-1" placeholder="info@royalacademy.com" />
           </div>
         </div>
         <div>
-          <Label>Address</Label>
-          <Input {...register('address')} className="mt-1" />
+          <Label>Footer Address</Label>
+          <Input {...register('address')} className="mt-1" placeholder="Rajkot, Gujarat" />
         </div>
         <Button type="submit" className="bg-primary text-white" disabled={submitting}>
           {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : 'Save Settings'}

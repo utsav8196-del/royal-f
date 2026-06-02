@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
-  const { user, token } = useAuth()
+  const navigate = useNavigate()
+  const { user, token, logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -61,12 +67,17 @@ export default function Navbar() {
             </Link>
           ))}
           {token && user ? (
-            <Button variant="outline" size="sm" asChild>
-              <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                <User size={16} className="mr-1" />
-                {user.role === 'admin' ? 'Admin' : 'My Account'}
-              </Link>
-            </Button>
+            <>
+              <Button variant="outline" size="sm" asChild>
+                <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>
+                  <User size={16} className="mr-1" />
+                  {user.role === 'admin' ? 'Admin' : 'My Account'}
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
@@ -110,9 +121,14 @@ export default function Navbar() {
                 </Link>
               ))}
               {token && user ? (
-                <Button variant="outline" asChild>
-                  <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>My Account</Link>
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1" asChild>
+                    <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>My Account</Link>
+                  </Button>
+                  <Button variant="ghost" className="flex-1" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </div>
               ) : (
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1" asChild>

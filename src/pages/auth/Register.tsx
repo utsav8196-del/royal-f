@@ -27,7 +27,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function Register() {
-  const { register: registerUser, user, token } = useAuth()
+  const { register: registerUser, logout, user, token } = useAuth()
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
 
@@ -49,8 +49,9 @@ export default function Register() {
         password: data.password,
         phone: data.phone || undefined,
       })
-      toast.success('Registration successful! Welcome to Royal Academy.')
-      navigate('/')
+      logout()
+      toast.success('Registration successful! Please log in to continue.')
+      navigate('/login')
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {
