@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth, getErrorMessage } from '@/context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -21,9 +21,15 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function AdminLogin() {
-  const { login, logout } = useAuth()
+  const { login, logout, user, token, loading } = useAuth()
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!loading && token && user?.role === 'admin') {
+      navigate('/admin', { replace: true })
+    }
+  }, [loading, token, user, navigate])
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })

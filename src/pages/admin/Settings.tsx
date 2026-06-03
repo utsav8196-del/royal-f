@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
 import ImageField from '@/components/admin/ImageField'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Mail, MapPin, Phone } from 'lucide-react'
 
 export default function Settings() {
   const [loading, setLoading] = useState(true)
@@ -17,7 +17,8 @@ export default function Settings() {
   const { register, handleSubmit, reset, setValue, watch } = useForm()
 
   useEffect(() => {
-    api.get('/settings')
+    api
+      .get('/settings')
       .then((res) => reset(res.data))
       .finally(() => setLoading(false))
   }, [reset])
@@ -27,7 +28,7 @@ export default function Settings() {
     try {
       await api.put('/settings', data)
       window.dispatchEvent(new Event('site-settings-updated'))
-      toast.success('Settings saved')
+      toast.success('Settings saved — footer & site updated')
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {
@@ -39,58 +40,100 @@ export default function Settings() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold">Site Settings</h1>
-      <p className="mt-1 text-slate-600">Manage global website content from the admin panel</p>
+      <h1 className="text-2xl font-bold">Settings</h1>
+      <p className="mt-1 text-slate-600">
+        Changes here update the footer, contact page, and site-wide details automatically.
+      </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <input type="hidden" {...register('logoUrl')} />
-        <ImageField
-          label="Site logo"
-          value={watch('logoUrl') || ''}
-          onChange={(url) => setValue('logoUrl', url)}
-          hint="Default: /logo.png. Upload your ROYAL logo file or paste a URL."
-          logoPreview
-        />
-        <div>
-          <Label>JustDial profile URL</Label>
-          <Input {...register('justDialUrl')} className="mt-1" />
-        </div>
-        <div>
-          <Label>Site Name</Label>
-          <Input {...register('siteName')} className="mt-1" />
-        </div>
-        <div>
-          <Label>Tagline</Label>
-          <Input {...register('tagline')} className="mt-1" />
-        </div>
-        <div>
-          <Label>Hero Title</Label>
-          <Input {...register('heroTitle')} className="mt-1" />
-        </div>
-        <div>
-          <Label>Hero Subtitle</Label>
-          <Textarea {...register('heroSubtitle')} className="mt-1" rows={2} />
-        </div>
-        <p className="text-sm font-medium text-slate-700">
-          Home sections are also managed under{' '}
-          <Link to="/admin/home" className="text-primary underline">Admin → Home Page</Link>.
-        </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-6 space-y-6"
+      >
+        {/* Footer & contact — primary section */}
+        <section className="space-y-4 rounded-xl border border-primary/20 bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+            <Phone className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold text-slate-900">Footer & contact info</h2>
+          </div>
+          <p className="text-sm text-slate-500">
+            Phone, email, and address shown in the website footer and on the Contact page.
+          </p>
           <div>
-            <Label>Footer Phone</Label>
+            <Label className="flex items-center gap-1">
+              <Phone size={14} /> Phone number
+            </Label>
             <Input {...register('phone')} className="mt-1" placeholder="+91 9876543210" />
           </div>
           <div>
-            <Label>Footer Email</Label>
-            <Input {...register('email')} className="mt-1" placeholder="info@royalacademy.com" />
+            <Label className="flex items-center gap-1">
+              <Mail size={14} /> Email
+            </Label>
+            <Input type="email" {...register('email')} className="mt-1" placeholder="info@royalacademy.com" />
           </div>
-        </div>
-        <div>
-          <Label>Footer Address</Label>
-          <Input {...register('address')} className="mt-1" placeholder="Rajkot, Gujarat" />
-        </div>
-        <Button type="submit" className="bg-primary text-white" disabled={submitting}>
-          {submitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : 'Save Settings'}
+          <div>
+            <Label className="flex items-center gap-1">
+              <MapPin size={14} /> Address
+            </Label>
+            <Textarea {...register('address')} className="mt-1" rows={2} placeholder="Rajkot, Gujarat" />
+          </div>
+          <div>
+            <Label>Working hours</Label>
+            <Input {...register('workingHours')} className="mt-1" placeholder="Mon – Sat : 8 AM – 8 PM" />
+          </div>
+        </section>
+
+        {/* General site */}
+        <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900">General site</h2>
+          <input type="hidden" {...register('logoUrl')} />
+          <ImageField
+            label="Site logo"
+            value={watch('logoUrl') || ''}
+            onChange={(url) => setValue('logoUrl', url)}
+            hint="Shown in header and footer."
+            logoPreview
+          />
+          <div>
+            <Label>Site name</Label>
+            <Input {...register('siteName')} className="mt-1" />
+          </div>
+          <div>
+            <Label>Tagline (footer)</Label>
+            <Input {...register('tagline')} className="mt-1" />
+          </div>
+          <div>
+            <Label>JustDial profile URL</Label>
+            <Input {...register('justDialUrl')} className="mt-1" />
+          </div>
+        </section>
+
+        {/* Home hero */}
+        <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900">Home page hero</h2>
+          <div>
+            <Label>Hero title</Label>
+            <Input {...register('heroTitle')} className="mt-1" />
+          </div>
+          <div>
+            <Label>Hero subtitle</Label>
+            <Textarea {...register('heroSubtitle')} className="mt-1" rows={2} />
+          </div>
+          <p className="text-sm text-slate-500">
+            More home sections:{' '}
+            <Link to="/admin/home" className="font-medium text-primary underline">
+              Admin → Home Page
+            </Link>
+          </p>
+        </section>
+
+        <Button type="submit" className="w-full bg-primary text-white sm:w-auto" disabled={submitting}>
+          {submitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
+            </>
+          ) : (
+            'Save all settings'
+          )}
         </Button>
       </form>
     </div>

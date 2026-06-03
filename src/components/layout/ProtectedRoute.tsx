@@ -34,5 +34,9 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
     )
   }
 
+  if (role === 'student' && user.role === 'admin') {
+    return <Navigate to="/admin" replace />
+  }
+
   return <>{children}</>
 }

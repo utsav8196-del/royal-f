@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, ExternalLink } from 'lucide-react'
+import { Mail, Phone, MapPin, ExternalLink, Clock } from 'lucide-react'
 import Logo from '@/components/brand/Logo'
 import { useSiteSettings } from '@/context/SiteSettingsContext'
 
 export default function Footer() {
-  const { tagline, phone, email, address, justDialUrl } = useSiteSettings()
+  const { siteName, tagline, phone, email, address, justDialUrl, workingHours } = useSiteSettings()
+  const year = new Date().getFullYear()
+  const displayName = siteName || 'Royal Academy'
+
+  const phoneHref = phone ? `tel:${String(phone).replace(/\s/g, '')}` : undefined
+  const emailHref = email ? `mailto:${email}` : undefined
 
   return (
     <footer className="bg-slate-900 py-12 text-white">
@@ -26,22 +31,64 @@ export default function Footer() {
         <div>
           <h3 className="mb-4 text-lg font-bold">Quick Links</h3>
           <div className="space-y-2">
-            <Link to="/courses" className="block text-slate-400 hover:text-white">Courses</Link>
-            <Link to="/admission" className="block text-slate-400 hover:text-white">Admission</Link>
-            <Link to="/contact" className="block text-slate-400 hover:text-white">Contact</Link>
+            <Link to="/courses" className="block text-slate-400 hover:text-white">
+              Courses
+            </Link>
+            <Link to="/about" className="block text-slate-400 hover:text-white">
+              About
+            </Link>
+            <Link to="/admission" className="block text-slate-400 hover:text-white">
+              Admission
+            </Link>
+            <Link to="/contact" className="block text-slate-400 hover:text-white">
+              Contact
+            </Link>
           </div>
         </div>
         <div>
           <h3 className="mb-4 text-lg font-bold">Contact Info</h3>
           <div className="space-y-2 text-slate-400">
-            <p><MapPin className="mr-1 inline w-4" /> {address || 'Rajkot, Gujarat'}</p>
-            <p><Phone className="mr-1 inline w-4" /> {phone || '+91 9876543210'}</p>
-            <p><Mail className="mr-1 inline w-4" /> {email || 'info@royalacademy.com'}</p>
+            {address && (
+              <p>
+                <MapPin className="mr-1 inline h-4 w-4 shrink-0" />
+                {address}
+              </p>
+            )}
+            {phone && (
+              <p>
+                <Phone className="mr-1 inline h-4 w-4 shrink-0" />
+                {phoneHref ? (
+                  <a href={phoneHref} className="hover:text-white">
+                    {phone}
+                  </a>
+                ) : (
+                  phone
+                )}
+              </p>
+            )}
+            {email && (
+              <p>
+                <Mail className="mr-1 inline h-4 w-4 shrink-0" />
+                {emailHref ? (
+                  <a href={emailHref} className="hover:text-white">
+                    {email}
+                  </a>
+                ) : (
+                  email
+                )}
+              </p>
+            )}
+            {workingHours && (
+              <p>
+                <Clock className="mr-1 inline h-4 w-4 shrink-0" />
+                {workingHours}
+              </p>
+            )}
           </div>
         </div>
       </div>
       <p className="mt-10 text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} Royal Academy. All rights reserved.
+        © {year} {displayName}. All rights reserved.
       </p>
     </footer>
   )

@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import { api } from '@/lib/api'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Clock } from 'lucide-react'
 import ContactForm from '@/components/forms/ContactForm'
 import AnimatedSection from '@/components/public/AnimatedSection'
 import PageMeta from '@/components/layout/PageMeta'
+import { useSiteSettings } from '@/context/SiteSettingsContext'
 
 const container = {
   hidden: { opacity: 0 },
@@ -13,26 +12,14 @@ const container = {
 const item = { hidden: { y: 20, opacity: 0 }, show: { y: 0, opacity: 1 } }
 
 export default function Contact() {
-  const [settings, setSettings] = useState({
-    address: 'Royal Academy, Rajkot - 360001, Gujarat',
-    phone: '+91 98765 43210',
-    email: 'info@royalacademy.com',
-  })
-
-  useEffect(() => {
-    api.get('/settings')
-      .then((res) => {
-        if (res.data) setSettings((prev) => ({ ...prev, ...res.data }))
-      })
-      .catch(() => {})
-  }, [])
+  const { address, phone, email, workingHours } = useSiteSettings()
 
   const contactDetails = [
-    { icon: MapPin, label: 'Address', value: settings.address },
-    { icon: Phone, label: 'Phone', value: settings.phone },
-    { icon: Mail, label: 'Email', value: settings.email },
-    { icon: Clock, label: 'Working Hours', value: 'Mon – Sat : 8 AM – 8 PM' },
-  ]
+    { icon: MapPin, label: 'Address', value: address },
+    { icon: Phone, label: 'Phone', value: phone },
+    { icon: Mail, label: 'Email', value: email },
+    { icon: Clock, label: 'Working Hours', value: workingHours },
+  ].filter((d) => d.value)
 
   return (
     <>
@@ -72,7 +59,7 @@ export default function Contact() {
               >
                 {contactDetails.map((detail, index) => (
                   <motion.div
-                    key={index}
+                    key={detail.label}
                     variants={item}
                     className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm sm:gap-4"
                   >

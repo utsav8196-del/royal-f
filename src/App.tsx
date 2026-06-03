@@ -62,6 +62,7 @@ export default function App() {
           <Route path="courses/:id/edit" element={<CourseForm />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="testimonials" element={<AdminTestimonials />} />
+          <Route path="faculty" element={<AdminTeam />} />
           <Route path="team" element={<AdminTeam />} />
           <Route path="blog" element={<AdminBlog />} />
           <Route path="gallery" element={<AdminGallery />} />

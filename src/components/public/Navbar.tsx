@@ -24,7 +24,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/login', { replace: true })
   }
 
   useEffect(() => {
@@ -68,12 +68,18 @@ export default function Navbar() {
           ))}
           {token && user ? (
             <>
-              <Button variant="outline" size="sm" asChild>
-                <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                  <User size={16} className="mr-1" />
-                  {user.role === 'admin' ? 'Admin' : 'My Account'}
-                </Link>
-              </Button>
+              {user.role === 'admin' ? (
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/admin">
+                    <User size={16} className="mr-1" />
+                    Admin Panel
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/dashboard">Dashboard</Link>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 Logout
               </Button>
@@ -122,9 +128,15 @@ export default function Navbar() {
               ))}
               {token && user ? (
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1" asChild>
-                    <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}>My Account</Link>
-                  </Button>
+                  {user.role === 'admin' ? (
+                    <Button variant="outline" className="flex-1" asChild>
+                      <Link to="/admin">Admin Panel</Link>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="flex-1" asChild>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </Button>
+                  )}
                   <Button variant="ghost" className="flex-1" onClick={handleLogout}>
                     Logout
                   </Button>
