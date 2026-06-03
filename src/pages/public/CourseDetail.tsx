@@ -32,16 +32,16 @@ export default function CourseDetail() {
   return (
     <>
       <PageMeta title={course.title} description={course.description} />
-      <AnimatedSection className="py-20">
-        <div className="mx-auto max-w-4xl px-4">
-          <h1 className="text-4xl font-bold">{course.title}</h1>
+      <AnimatedSection className="py-10 sm:py-16 md:py-20">
+        <div className="mx-auto max-w-4xl overflow-x-hidden px-4">
+          <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{course.title}</h1>
           <img
             src={course.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800'}
             alt={course.title}
-            className="my-6 h-64 w-full rounded-xl object-cover shadow-lg"
+            className="my-4 h-48 w-full rounded-xl object-cover shadow-lg sm:my-6 sm:h-64 md:h-72"
             loading="lazy"
           />
-          <p className="text-lg text-slate-700">{course.description}</p>
+          <p className="text-base leading-relaxed text-slate-700 sm:text-lg">{course.description}</p>
           <div className="mt-6 flex flex-wrap gap-4">
             <span className="rounded-full bg-slate-100 px-4 py-1 text-sm">{course.duration}</span>
             <span className="rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">{course.fee}</span>

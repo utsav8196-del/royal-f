@@ -9,8 +9,8 @@ export default function Admission() {
       <div className="page-section">
         <div className="mx-auto max-w-4xl px-4">
           <AnimatedSection>
-            <h1 className="text-center text-4xl font-bold">Admission Enquiry</h1>
-            <p className="mx-auto mt-4 max-w-xl text-center text-slate-600">
+            <h1 className="text-center text-3xl font-bold sm:text-4xl">Admission Enquiry</h1>
+            <p className="mx-auto mt-3 max-w-xl px-2 text-center text-sm text-slate-600 sm:mt-4 sm:text-base">
               Fill in your details and our team will reach out within 24 hours.
             </p>
           </AnimatedSection>

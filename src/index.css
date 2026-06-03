@@ -20,7 +20,7 @@
   }
 
   body {
-    @apply bg-white text-slate-800 font-sans antialiased;
+    @apply overflow-x-hidden bg-white text-slate-800 font-sans antialiased;
   }
 
   h1, h2, h3, h4 {

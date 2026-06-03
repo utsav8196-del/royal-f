@@ -9,7 +9,7 @@ export default function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-1 overflow-x-hidden pt-16">
         <PageTransition key={location.pathname}>
           <Outlet />
         </PageTransition>

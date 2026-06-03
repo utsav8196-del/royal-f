@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -9,9 +9,12 @@ import {
   Settings,
   Home,
   MessageSquare,
+  LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Logo from '@/components/brand/Logo'
+import { useAuth } from '@/context/AuthContext'
+import { Button } from '@/components/ui/button'
 
 const links = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
@@ -31,6 +34,15 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    onClose()
+    navigate('/admin/login')
+  }
+
   return (
     <motion.aside
       initial={{ x: -256 }}
@@ -61,9 +73,20 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           </NavLink>
         ))}
       </nav>
-      <p className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-400">
-        Manage courses, gallery, reviews & home sections
-      </p>
+      <div className="mt-4 border-t border-slate-200 pt-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleLogout}
+          className="flex w-full items-center justify-center gap-2"
+        >
+          <LogOut size={16} />
+          Logout
+        </Button>
+        <p className="mt-3 text-xs text-slate-400">
+          Manage courses, gallery, reviews & home sections
+        </p>
+      </div>
     </motion.aside>
   )
 }

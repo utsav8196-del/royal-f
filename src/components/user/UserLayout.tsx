@@ -68,7 +68,7 @@ export default function UserLayout() {
             initial={{ x: -256 }}
             animate={{ x: isSidebarOpen ? 0 : -256 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="fixed left-0 top-32 z-40 w-64 h-[calc(100vh-8rem)] shrink-0 border-r border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 p-6 overflow-y-auto lg:relative lg:top-0 lg:h-auto lg:block lg:translate-x-0 lg:bg-slate-50 shadow-xl lg:shadow-none"
+            className="fixed left-0 top-32 z-40 flex h-[calc(100vh-8rem)] w-64 shrink-0 flex-col border-r border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100 p-6 overflow-y-auto shadow-xl lg:relative lg:top-0 lg:h-auto lg:translate-x-0 lg:bg-slate-50 lg:shadow-none"
           >
             {/* User Profile Section */}
             <motion.div
@@ -103,7 +103,7 @@ export default function UserLayout() {
             </motion.div>
 
             {/* Navigation Links */}
-            <nav className="space-y-2 mb-8">
+            <nav className="mb-4 flex-1 space-y-2">
               {navItems.map((item) => (
                 <motion.div
                   key={item.href}
@@ -160,7 +160,7 @@ export default function UserLayout() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.4 }}
-              className="mt-auto"
+              className="mt-auto border-t border-slate-200 pt-4"
             >
               <motion.button
                 onClick={handleLogout}
@@ -196,7 +196,7 @@ export default function UserLayout() {
           </motion.aside>
 
           {/* Main Content */}
-          <main className="w-full flex-1 bg-slate-50/50 p-6 md:p-10 lg:p-10 mt-16 lg:mt-0">
+          <main className="mt-16 w-full flex-1 overflow-x-hidden bg-slate-50/50 p-4 sm:p-6 md:p-10 lg:mt-0">
             <PageTransition>
               <Outlet />
             </PageTransition>
