@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { IMAGE_PLACEHOLDER, resolveImageUrl } from '@/lib/images'
 
-interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface ResponsiveImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src?: string | null
   fallbackSrc?: string
 }

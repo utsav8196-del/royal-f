@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getApiBase, getApiUrl, ENV_API_BASE_EXPORT } from '@/lib/apiBase'
+import { getApiUrl, ENV_API_BASE_EXPORT } from '@/lib/apiBase'
 import { normalizeImageUrlForStorage } from '@/lib/images'
 
 export { getApiBase, getApiUrl } from '@/lib/apiBase'
