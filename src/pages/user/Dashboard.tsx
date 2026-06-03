@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { BookOpen, GraduationCap, MessageSquare } from 'lucide-react'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 export default function UserDashboard() {
   const { user } = useAuth()
@@ -62,9 +63,11 @@ export default function UserDashboard() {
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {courses.map((course) => (
               <Card key={course._id} className="overflow-hidden border-slate-200">
-                {course.image && (
-                  <img src={course.image} alt="" className="h-36 w-full object-cover" />
-                )}
+                <ResponsiveImage
+                  src={course.image}
+                  alt={course.title}
+                  className="h-36 w-full object-cover bg-slate-100"
+                />
                 <CardContent className="p-4">
                   <h3 className="font-semibold">{course.title}</h3>
                   <p className="mt-1 line-clamp-2 text-sm text-slate-600">{course.description}</p>

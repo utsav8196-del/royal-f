@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
 import PageMeta from '@/components/layout/PageMeta'
 import AnimatedSection from '@/components/public/AnimatedSection'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
+import { IMAGE_PLACEHOLDER } from '@/lib/images'
 
 export default function CourseDetail() {
   const { slug } = useParams()
@@ -35,11 +37,11 @@ export default function CourseDetail() {
       <AnimatedSection className="py-10 sm:py-16 md:py-20">
         <div className="mx-auto max-w-4xl overflow-x-hidden px-4">
           <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{course.title}</h1>
-          <img
-            src={course.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800'}
+          <ResponsiveImage
+            src={course.image}
             alt={course.title}
+            fallbackSrc={IMAGE_PLACEHOLDER}
             className="my-4 h-48 w-full rounded-xl object-cover shadow-lg sm:my-6 sm:h-64 md:h-72"
-            loading="lazy"
           />
           <p className="text-base leading-relaxed text-slate-700 sm:text-lg">{course.description}</p>
           <div className="mt-6 flex flex-wrap gap-4">

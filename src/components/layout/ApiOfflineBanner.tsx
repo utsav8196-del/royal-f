@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AlertCircle } from 'lucide-react'
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+import { getApiUrl } from '@/lib/apiBase'
 
 type ApiStatus = 'ok' | 'server_down' | 'db_down'
 
@@ -13,7 +12,7 @@ export default function ApiOfflineBanner() {
 
     const check = async () => {
       try {
-        const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(4000) })
+        const res = await fetch(`${getApiUrl()}/health`, { signal: AbortSignal.timeout(4000) })
         const data = await res.json().catch(() => ({}))
         if (cancelled) return
         if (res.ok && data.database === 'connected') {

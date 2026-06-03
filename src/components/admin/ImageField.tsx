@@ -6,6 +6,7 @@ import { uploadImage } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { Loader2, Upload } from 'lucide-react'
 import FitImageBox from '@/components/ui/FitImageBox'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 interface ImageFieldProps {
   label: string
@@ -69,7 +70,7 @@ export default function ImageField({
         <div className="mb-4 mt-2">
           {logoPreview ? (
             <div className="inline-block rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <img
+              <ResponsiveImage
                 src={value}
                 alt="Logo preview"
                 style={{ maxWidth: '200px', maxHeight: '100px', objectFit: 'contain' }}
@@ -96,7 +97,7 @@ export default function ImageField({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
         onChange={handleFileChange}
         className="hidden"
       />

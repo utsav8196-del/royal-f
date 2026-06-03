@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
 
 type AspectRatio = 'square' | 'video' | '4/3' | 'auto'
 type Size = 'sm' | 'md' | 'lg'
@@ -54,12 +55,10 @@ export default function FitImageBox({
       )}
     >
       <div className="absolute inset-0 flex items-center justify-center p-2">
-        <img
+        <ResponsiveImage
           src={src}
           alt={alt}
           className="max-h-full max-w-full object-contain object-center"
-          loading="lazy"
-          decoding="async"
         />
       </div>
     </div>

@@ -1,13 +1,19 @@
 import axios from 'axios'
+import { getApiBase, getApiUrl, ENV_API_BASE_EXPORT } from '@/lib/apiBase'
+import { normalizeImageUrlForStorage } from '@/lib/images'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+export { getApiBase, getApiUrl } from '@/lib/apiBase'
+
+/** @deprecated Prefer getApiBase() for image URLs on mobile/LAN */
+export const API_BASE = ENV_API_BASE_EXPORT
 
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: getApiUrl(),
   headers: { 'Content-Type': 'application/json' },
 })
 
 api.interceptors.request.use((config) => {
+  config.baseURL = getApiUrl()
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -29,14 +35,12 @@ api.interceptors.response.use(
   }
 )
 
-const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') || 'http://localhost:5000'
-
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData()
   formData.append('image', file)
   const token = localStorage.getItem('token')
   const { data } = await axios.post<{ url: string; message?: string }>(
-    `${API_URL}/upload/image`,
+    `${getApiUrl()}/upload/image`,
     formData,
     {
       headers: {
@@ -45,10 +49,8 @@ export async function uploadImage(file: File): Promise<string> {
       },
     }
   )
-  return data.url
+  return normalizeImageUrlForStorage(data.url)
 }
-
-export { API_BASE }
 
 export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {

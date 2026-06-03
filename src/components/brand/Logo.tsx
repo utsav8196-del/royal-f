@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useSiteSettings } from '@/context/SiteSettingsContext'
+import { resolveImageUrl } from '@/lib/images'
 
 interface LogoProps {
   className?: string
@@ -32,12 +33,12 @@ export default function Logo({
   knockoutWhite = true,
 }: LogoProps) {
   const { siteName, logoUrl } = useSiteSettings()
-  const [src, setSrc] = useState(logoUrl || DEFAULT_LOGO)
+  const [src, setSrc] = useState(() => resolveImageUrl(logoUrl || DEFAULT_LOGO, DEFAULT_LOGO))
   const name = siteName || 'Royal Academy'
   const knockoutClass = useKnockoutClass(src, variant, knockoutWhite)
 
   useEffect(() => {
-    setSrc(logoUrl || DEFAULT_LOGO)
+    setSrc(resolveImageUrl(logoUrl || DEFAULT_LOGO, DEFAULT_LOGO))
   }, [logoUrl])
 
   const handleError = () => {
