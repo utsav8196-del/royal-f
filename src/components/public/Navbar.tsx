@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, User } from 'lucide-react'
+import { Menu, X, User, Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
+import { useTheme } from '@/context/ThemeContext'
 import Logo from '@/components/brand/Logo'
 
 const navLinks = [
@@ -21,6 +22,7 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, token, logout } = useAuth()
+  const { theme, toggleTheme } = useTheme()
 
   const handleLogout = () => {
     logout()
@@ -41,8 +43,8 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? 'border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-md' : 'bg-white/70 backdrop-blur-sm'
+      className={`fixed top-0 z-50 w-full transition-all duration-300 dark:bg-slate-900/90 dark:backdrop-blur-md ${
+        scrolled ? 'border-b border-slate-200/80 dark:border-slate-700/50 bg-white/90 shadow-sm backdrop-blur-md' : 'bg-white/70 dark:bg-slate-900/50 backdrop-blur-sm'
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
@@ -53,15 +55,15 @@ export default function Navbar() {
             <Link
               key={link.href}
               to={link.href}
-              className={`relative text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.href ? 'text-primary' : 'text-slate-700'
+              className={`relative text-sm font-medium transition-colors hover:text-primary dark:hover:text-blue-400 ${
+                location.pathname === link.href ? 'text-primary dark:text-blue-400' : 'text-slate-700 dark:text-slate-300'
               }`}
             >
               {link.label}
               {location.pathname === link.href && (
                 <motion.span
                   layoutId="underline"
-                  className="absolute -bottom-1 left-0 h-0.5 w-full bg-primary"
+                  className="absolute -bottom-1 left-0 h-0.5 w-full bg-primary dark:bg-blue-400"
                 />
               )}
             </Link>
@@ -97,6 +99,13 @@ export default function Navbar() {
           <Button size="sm" className="bg-primary text-white" asChild>
             <Link to="/admission">Enquire Now</Link>
           </Button>
+          <button
+            onClick={toggleTheme}
+            className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
         </div>
 
         <button
@@ -114,14 +123,14 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-slate-200 bg-white lg:hidden"
+            className="overflow-hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 lg:hidden"
           >
             <div className="flex flex-col gap-3 px-4 py-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className={`text-lg font-medium ${location.pathname === link.href ? 'text-primary' : 'text-slate-700'}`}
+                  className={`text-lg font-medium ${location.pathname === link.href ? 'text-primary dark:text-blue-400' : 'text-slate-700 dark:text-slate-300'}`}
                 >
                   {link.label}
                 </Link>

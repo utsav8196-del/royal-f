@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { api, getErrorMessage } from '@/lib/api'
+import { useAuth } from '@/context/AuthContext'
 import toast from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
 
@@ -24,9 +26,30 @@ type FormData = z.infer<typeof schema>
 export default function AdmissionForm() {
   const [step, setStep] = useState(1)
   const [submitting, setSubmitting] = useState(false)
+  const navigate = useNavigate()
+  const { user, token } = useAuth()
+
   const { register, handleSubmit, formState: { errors }, reset, setValue, trigger } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: user?.name || '',
+      email: user?.email || '',
+    }
   })
+
+  useEffect(() => {
+    if (!token || !user) {
+      toast.error('Please log in to submit an enquiry.')
+      navigate('/login', { state: { from: '/admission' } })
+    }
+  }, [token, user, navigate])
+
+  useEffect(() => {
+    if (user) {
+      setValue('name', user.name)
+      setValue('email', user.email)
+    }
+  }, [user, setValue])
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
@@ -35,6 +58,7 @@ export default function AdmissionForm() {
       toast.success('Enquiry submitted! We will contact you soon.')
       reset()
       setStep(1)
+      navigate('/', { replace: true })
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {

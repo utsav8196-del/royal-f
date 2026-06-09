@@ -6,9 +6,11 @@ import AnimatedSection from '@/components/public/AnimatedSection'
 import AnimatedCounter from '@/components/public/AnimatedCounter'
 import CourseCard from '@/components/public/CourseCard'
 import TestimonialCard from '@/components/public/TestimonialCard'
+import ReviewForm from '@/components/forms/ReviewForm'
 import { Link } from 'react-router-dom'
 import PageMeta from '@/components/layout/PageMeta'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
+import { X } from 'lucide-react'
 
 const container = {
   hidden: { opacity: 0 },
@@ -21,6 +23,7 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState<any[]>([])
   const [settings, setSettings] = useState<Record<string, string | number>>({})
   const [loading, setLoading] = useState(true)
+  const [showReviewModal, setShowReviewModal] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -123,7 +126,15 @@ export default function Home() {
 
       <section className="page-section">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-center text-3xl font-bold">{testimonialsTitle}</h2>
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-baseline">
+            <h2 className="text-center text-3xl font-bold sm:text-left">{testimonialsTitle}</h2>
+            <Button
+              onClick={() => setShowReviewModal(true)}
+              className="bg-primary text-white hover:bg-blue-700 dark:hover:bg-blue-800"
+            >
+              Share Your Review
+            </Button>
+          </div>
           <div className="mt-12 flex gap-6 overflow-x-auto pb-4 snap-x">
             {testimonials.map((t) => (
               <div key={t._id} className="min-w-[300px] snap-start">
@@ -136,6 +147,28 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {showReviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-700 dark:bg-slate-900"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-2xl font-bold">Share Your Review</h3>
+              <button
+                onClick={() => setShowReviewModal(false)}
+                className="rounded-lg p-1 text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <ReviewForm onSuccess={() => setShowReviewModal(false)} />
+          </motion.div>
+        </div>
+      )}
     </>
   )
 }

@@ -27,14 +27,16 @@ import UserDashboard from './pages/user/Dashboard'
 import NotFound from './pages/NotFound'
 import { AuthProvider } from './context/AuthContext'
 import { SiteSettingsProvider } from './context/SiteSettingsContext'
+import { ThemeProvider } from './context/ThemeContext'
 import ApiOfflineBanner from './components/layout/ApiOfflineBanner'
 
 export default function App() {
   return (
-    <AuthProvider>
-      <SiteSettingsProvider>
-      <ApiOfflineBanner />
-      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+    <ThemeProvider>
+      <AuthProvider>
+        <SiteSettingsProvider>
+          <ApiOfflineBanner />
+          <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -71,7 +73,8 @@ export default function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
-      </SiteSettingsProvider>
-    </AuthProvider>
+        </SiteSettingsProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

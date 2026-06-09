@@ -40,7 +40,13 @@ export default function Login() {
     setSubmitting(true)
     try {
       const user = await login(data.email, data.password)
-      toast.success(`Welcome back, ${user.name}!`)
+      const isFirstLogin = !localStorage.getItem(`first-login-${user.id}`)
+      if (isFirstLogin) {
+        localStorage.setItem(`first-login-${user.id}`, 'true')
+        toast.success(`Welcome, ${user.name}! 🎉`)
+      } else {
+        toast.success(`Welcome back, ${user.name}!`)
+      }
       navigate(user.role === 'admin' ? '/admin' : from)
     } catch (err) {
       toast.error(getErrorMessage(err))
@@ -52,17 +58,17 @@ export default function Login() {
   return (
     <>
       <PageMeta title="Login" description="Sign in to your Royal Academy account" />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-white px-4 py-12">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-900 px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl"
+          className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 shadow-xl dark:shadow-2xl"
         >
           <div className="mb-4 flex justify-center">
             <Logo linkToHome />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Student Login</h1>
-          <p className="mt-1 text-sm text-slate-600">Sign in with your registered account</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Student Login</h1>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Sign in with your registered account</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
             <div>
@@ -80,13 +86,18 @@ export default function Login() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-600">
+          <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
             Don&apos;t have an account?{' '}
-            <Link to="/register" className="font-medium text-primary hover:underline">Register first</Link>
+            <Link to="/register" className="font-medium text-primary dark:text-blue-400 hover:underline">Register first</Link>
           </p>
           <p className="mt-2 text-center text-sm">
-            <Link to="/admin/login" className="text-slate-500 hover:text-primary">Admin login →</Link>
+            <Link to="/admin/login" className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400">Admin login →</Link>
           </p>
+          <div className="mt-6 flex gap-2">
+            <Button variant="outline" className="flex-1" asChild>
+              <Link to="/">Back to Home</Link>
+            </Button>
+          </div>
         </motion.div>
       </div>
     </>

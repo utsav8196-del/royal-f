@@ -83,17 +83,6 @@ export default function UserDashboard() {
           </div>
         </section>
 
-        <Card className="mt-10 border-primary/20 bg-gradient-to-r from-blue-50 to-white">
-          <CardContent className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Ready to enroll?</h3>
-              <p className="text-sm text-slate-600">Submit an admission enquiry and our team will contact you.</p>
-            </div>
-            <Button className="bg-primary text-white" asChild>
-              <Link to="/admission">Admission Enquiry</Link>
-            </Button>
-          </CardContent>
-        </Card>
       </motion.div>
     </>
   )
