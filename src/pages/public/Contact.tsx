@@ -57,7 +57,7 @@ export default function Contact() {
                 viewport={{ once: true }}
                 className="space-y-4 sm:space-y-6"
               >
-                {contactDetails.map((detail, index) => (
+                {contactDetails.map((detail) => (
                   <motion.div
                     key={detail.label}
                     variants={item}

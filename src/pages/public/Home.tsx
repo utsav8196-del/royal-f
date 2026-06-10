@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
 import { api } from '@/lib/api'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import AnimatedSection from '@/components/public/AnimatedSection'
 import AnimatedCounter from '@/components/public/AnimatedCounter'
 import CourseCard from '@/components/public/CourseCard'
 import TestimonialCard from '@/components/public/TestimonialCard'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import PageMeta from '@/components/layout/PageMeta'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
+import { useAuth } from '@/context/AuthContext'
+import { getErrorMessage } from '@/lib/api'
+import toast from 'react-hot-toast'
+import { Loader2, Star } from 'lucide-react'
 
 const container = {
   hidden: { opacity: 0 },
@@ -17,10 +24,16 @@ const container = {
 const item = { hidden: { y: 30, opacity: 0 }, show: { y: 0, opacity: 1, transition: { duration: 0.5 } } }
 
 export default function Home() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
   const [courses, setCourses] = useState<any[]>([])
   const [testimonials, setTestimonials] = useState<any[]>([])
   const [settings, setSettings] = useState<Record<string, string | number>>({})
   const [loading, setLoading] = useState(true)
+  const [reviewOpen, setReviewOpen] = useState(false)
+  const [reviewMessage, setReviewMessage] = useState('')
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewSubmitting, setReviewSubmitting] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -50,6 +63,35 @@ export default function Home() {
   const popularTitle = String(settings.popularCoursesTitle || 'Popular Courses')
   const testimonialsTitle = String(settings.testimonialsTitle || 'What Our Students Say')
   const stats = (settings.stats as { students?: number; courses?: number; years?: number; successRate?: number }) || {}
+
+  const handleReviewClick = () => {
+    if (!user) {
+      toast.error('Please log in to add your review.')
+      navigate('/login', { state: { from: '/' } })
+      return
+    }
+    setReviewOpen((open) => !open)
+  }
+
+  const submitReview = async (event: FormEvent) => {
+    event.preventDefault()
+    setReviewSubmitting(true)
+    try {
+      const { data } = await api.post('/testimonials/student', {
+        message: reviewMessage,
+        rating: reviewRating,
+      })
+      setTestimonials((items) => [data, ...items])
+      setReviewMessage('')
+      setReviewRating(5)
+      setReviewOpen(false)
+      toast.success('Thanks! Your review has been added.')
+    } catch (err) {
+      toast.error(getErrorMessage(err))
+    } finally {
+      setReviewSubmitting(false)
+    }
+  }
 
   if (loading) return <LoadingSpinner />
 
@@ -85,10 +127,10 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section className="page-section">
+      <section className="page-section bg-white">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-center text-3xl font-bold">{popularTitle}</h2>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <h2 className="text-center text-3xl font-bold text-slate-900">{popularTitle}</h2>
+          <div className="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {courses.map((course) => (
               <AnimatedSection key={course._id}>
                 <CourseCard course={course} />
@@ -121,9 +163,62 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="page-section">
+      <section className="page-section bg-white">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-center text-3xl font-bold">{testimonialsTitle}</h2>
+          <div className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+            <div>
+              <h2 className="text-3xl font-bold text-slate-900">{testimonialsTitle}</h2>
+              <p className="mt-2 text-sm text-slate-600">Students can share their learning experience here.</p>
+            </div>
+            <Button type="button" onClick={handleReviewClick} className="bg-primary text-white">
+              Add Your Review
+            </Button>
+          </div>
+          {reviewOpen && (
+            <motion.form
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              onSubmit={submitReview}
+              className="mx-auto mt-8 max-w-2xl rounded-lg border border-slate-200 bg-slate-50 p-5 shadow-sm"
+            >
+              <div>
+                <Label htmlFor="student-review">Your Review</Label>
+                <Textarea
+                  id="student-review"
+                  value={reviewMessage}
+                  onChange={(event) => setReviewMessage(event.target.value)}
+                  className="mt-2 min-h-28 bg-white"
+                  placeholder="Share what helped you most..."
+                  required
+                  minLength={10}
+                />
+              </div>
+              <div className="mt-4">
+                <Label>Rating</Label>
+                <div className="mt-2 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <button
+                      key={rating}
+                      type="button"
+                      onClick={() => setReviewRating(rating)}
+                      className="rounded-md p-1 text-amber-400 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      aria-label={`${rating} star rating`}
+                    >
+                      <Star className="h-6 w-6" fill={rating <= reviewRating ? 'currentColor' : 'none'} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
+                <Button type="button" variant="outline" onClick={() => setReviewOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-primary text-white" disabled={reviewSubmitting}>
+                  {reviewSubmitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Adding...</> : 'Submit Review'}
+                </Button>
+              </div>
+            </motion.form>
+          )}
           <div className="mt-12 flex gap-6 overflow-x-auto pb-4 snap-x">
             {testimonials.map((t) => (
               <div key={t._id} className="min-w-[300px] snap-start">

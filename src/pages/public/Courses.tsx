@@ -21,13 +21,22 @@ export default function Courses() {
   return (
     <>
       <PageMeta title="Courses" description="Browse JEE, NEET, and Foundation courses at Royal Academy." />
-      <div className="page-section">
-        <div className="mx-auto max-w-7xl px-4">
-          <h1 className="text-center text-3xl font-bold sm:text-4xl">All Courses</h1>
-          <p className="mx-auto mt-3 max-w-2xl px-2 text-center text-sm text-slate-600 sm:mt-4 sm:text-base">
+      <section
+        className="relative flex min-h-[40vh] items-center bg-cover bg-center bg-no-repeat sm:min-h-[50vh] md:min-h-[60vh]"
+        style={{ backgroundImage: "url('/images/about-bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-primary/80" />
+        <AnimatedSection className="relative z-10 w-full px-4 py-12 text-center text-white sm:py-16 md:py-20">
+          <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">All Courses</h1>
+          <p className="mx-auto mt-3 max-w-3xl text-base leading-relaxed text-blue-50 sm:mt-4 sm:text-lg md:text-xl">
             Choose the program that fits your goals. Expert guidance at every step.
           </p>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        </AnimatedSection>
+      </section>
+
+      <section className="py-10 sm:py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {courses.map((course) => (
               <AnimatedSection key={course._id}>
                 <CourseCard course={course} />
@@ -38,7 +47,7 @@ export default function Courses() {
             <p className="mt-8 text-center text-slate-500">No courses found.</p>
           )}
         </div>
-      </div>
+      </section>
     </>
   )
 }

@@ -8,6 +8,7 @@ export interface User {
   name: string
   role: 'admin' | 'student'
   phone?: string
+  isFirstLogin?: boolean
 }
 
 interface AuthContextType {
@@ -53,11 +54,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [token, refreshUser])
 
   const login = async (email: string, password: string) => {
-    const { data } = await api.post<{ token: string; user: User }>('/auth/login', { email, password })
+    const { data } = await api.post<{ token: string; user: User; isFirstLogin?: boolean }>('/auth/login', { email, password })
+    const userWithMeta = { ...data.user, isFirstLogin: data.isFirstLogin }
     localStorage.setItem('token', data.token)
     setToken(data.token)
-    setUser(data.user)
-    return data.user
+    setUser(userWithMeta)
+    return userWithMeta
   }
 
   const register = async (payload: { name: string; email: string; password: string; phone?: string }) => {

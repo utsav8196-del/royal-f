@@ -28,6 +28,7 @@ import NotFound from './pages/NotFound'
 import { AuthProvider } from './context/AuthContext'
 import { SiteSettingsProvider } from './context/SiteSettingsContext'
 import ApiOfflineBanner from './components/layout/ApiOfflineBanner'
+import ProtectedRoute from './components/layout/ProtectedRoute'
 
 export default function App() {
   return (
@@ -43,7 +44,7 @@ export default function App() {
           <Route path="/courses/:slug" element={<CourseDetail />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/admission" element={<Admission />} />
+          <Route path="/admission" element={<ProtectedRoute role="student"><Admission /></ProtectedRoute>} />
         </Route>
 
         <Route path="/register" element={<Register />} />

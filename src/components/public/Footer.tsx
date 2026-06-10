@@ -10,6 +10,7 @@ export default function Footer() {
 
   const phoneHref = phone ? `tel:${String(phone).replace(/\s/g, '')}` : undefined
   const emailHref = email ? `mailto:${email}` : undefined
+  const scrollToTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 
   return (
     <footer className="bg-slate-900 py-12 text-white">
@@ -31,17 +32,20 @@ export default function Footer() {
         <div>
           <h3 className="mb-4 text-lg font-bold">Quick Links</h3>
           <div className="space-y-2">
-            <Link to="/courses" className="block text-slate-400 hover:text-white">
+            <Link to="/courses" onClick={scrollToTop} className="block text-slate-400 hover:text-white">
               Courses
             </Link>
-            <Link to="/about" className="block text-slate-400 hover:text-white">
+            <Link to="/about" onClick={scrollToTop} className="block text-slate-400 hover:text-white">
               About
             </Link>
-            <Link to="/admission" className="block text-slate-400 hover:text-white">
+            <Link to="/admission" onClick={scrollToTop} className="block text-slate-400 hover:text-white">
               Admission
             </Link>
-            <Link to="/contact" className="block text-slate-400 hover:text-white">
+            <Link to="/contact" onClick={scrollToTop} className="block text-slate-400 hover:text-white">
               Contact
+            </Link>
+            <Link to="/gallery" onClick={scrollToTop} className="block text-slate-400 hover:text-white">
+              Gallery
             </Link>
           </div>
         </div>

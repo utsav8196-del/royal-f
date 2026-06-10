@@ -40,7 +40,7 @@ export default function Login() {
     setSubmitting(true)
     try {
       const user = await login(data.email, data.password)
-      toast.success(`Welcome back, ${user.name}!`)
+      toast.success(user.isFirstLogin ? `Welcome to Royal Academy, ${user.name}!` : `Welcome back, ${user.name}!`)
       navigate(user.role === 'admin' ? '/admin' : from)
     } catch (err) {
       toast.error(getErrorMessage(err))
@@ -86,6 +86,9 @@ export default function Login() {
           </p>
           <p className="mt-2 text-center text-sm">
             <Link to="/admin/login" className="text-slate-500 hover:text-primary">Admin login →</Link>
+          </p>
+          <p className="mt-2 text-center text-sm">
+            <Link to="/" className="text-slate-500 hover:text-primary">Back to Home</Link>
           </p>
         </motion.div>
       </div>

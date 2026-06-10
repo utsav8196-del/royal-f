@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Clock, IndianRupee } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ResponsiveImage from '@/components/ui/ResponsiveImage'
@@ -16,23 +17,30 @@ interface Course {
 
 export default function CourseCard({ course }: { course: Course }) {
   return (
-    <motion.div whileHover={{ scale: 1.03 }}>
-      <Card className="overflow-hidden shadow-md">
-        <div className="relative h-48 overflow-hidden bg-slate-100">
+    <motion.div whileHover={{ y: -4 }} className="h-full">
+      <Card className="flex h-full flex-col overflow-hidden border-slate-200 shadow-sm transition-shadow duration-300 hover:shadow-xl">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
           <ResponsiveImage
             src={course.image}
             alt={course.title}
             fallbackSrc={IMAGE_PLACEHOLDER}
-            className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
           />
         </div>
-        <CardContent className="p-4">
-          <h3 className="text-xl font-semibold">{course.title}</h3>
-          <div className="mt-2 flex justify-between text-sm text-gray-600">
-            <span>⏱️ {course.duration}</span>
-            <span>💰 {course.fee}</span>
+        <CardContent className="flex flex-1 flex-col p-5">
+          <h3 className="line-clamp-2 min-h-[3.5rem] text-xl font-semibold text-slate-900">{course.title}</h3>
+          <div className="mt-3 grid gap-2 text-sm text-slate-600">
+            <span className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-primary" />
+              {course.duration}
+            </span>
+            <span className="flex items-center gap-2">
+              <IndianRupee className="h-4 w-4 text-primary" />
+              {course.fee}
+            </span>
           </div>
-          <Button asChild className="mt-4 w-full bg-primary text-white">
+          <Button asChild className="mt-auto w-full bg-primary text-white">
             <Link to={`/courses/${course.slug}`}>View Details</Link>
           </Button>
         </CardContent>

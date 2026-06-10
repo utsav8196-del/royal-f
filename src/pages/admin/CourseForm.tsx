@@ -65,7 +65,7 @@ export default function CourseForm() {
       const msg = getErrorMessage(err)
       toast.error(msg)
       if (msg.toLowerCase().includes('admin')) {
-        navigate('/admin/login')
+        navigate('/login')
       }
     } finally {
       setSubmitting(false)

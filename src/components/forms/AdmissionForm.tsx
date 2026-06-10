@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { api, getErrorMessage } from '@/lib/api'
+import { useAuth } from '@/context/AuthContext'
 import toast from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
 
@@ -22,11 +24,20 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export default function AdmissionForm() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
   const [step, setStep] = useState(1)
   const [submitting, setSubmitting] = useState(false)
   const { register, handleSubmit, formState: { errors }, reset, setValue, trigger } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  useEffect(() => {
+    if (!user) return
+    setValue('name', user.name)
+    setValue('email', user.email)
+    if (user.phone) setValue('phone', user.phone)
+  }, [setValue, user])
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
@@ -35,6 +46,7 @@ export default function AdmissionForm() {
       toast.success('Enquiry submitted! We will contact you soon.')
       reset()
       setStep(1)
+      navigate('/', { replace: true })
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {
@@ -52,7 +64,7 @@ export default function AdmissionForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-8 shadow-lg">
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-5 shadow-lg sm:p-8">
       <div className="mb-6 flex gap-2">
         {[1, 2, 3].map((s) => (
           <div
@@ -64,7 +76,7 @@ export default function AdmissionForm() {
 
       {step === 1 && (
         <div className="space-y-4 animate-in fade-in">
-          <h2 className="text-xl font-bold">Personal Details</h2>
+          <h2 className="text-xl font-bold text-slate-900">Personal Details</h2>
           <div>
             <Label>Name</Label>
             <Input {...register('name')} className="mt-1" />
@@ -86,7 +98,7 @@ export default function AdmissionForm() {
 
       {step === 2 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-bold">Course Selection</h2>
+          <h2 className="text-xl font-bold text-slate-900">Course Selection</h2>
           <div>
             <Label>Preferred Course</Label>
             <Select onValueChange={(val) => setValue('course', val)}>
@@ -113,7 +125,7 @@ export default function AdmissionForm() {
 
       {step === 3 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-bold">Confirmation</h2>
+          <h2 className="text-xl font-bold text-slate-900">Confirmation</h2>
           <p className="text-slate-600">Review and submit your admission enquiry.</p>
           <div className="flex gap-2">
             <Button type="button" variant="outline" onClick={() => setStep(2)}>Back</Button>
