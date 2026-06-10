@@ -52,6 +52,23 @@ export async function uploadImage(file: File): Promise<string> {
   return normalizeImageUrlForStorage(data.url)
 }
 
+export async function uploadProfileImage(file: File): Promise<string> {
+  const formData = new FormData()
+  formData.append('image', file)
+  const token = localStorage.getItem('token')
+  const { data } = await axios.post<{ url: string; message?: string }>(
+    `${getApiUrl()}/upload/profile-image`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    }
+  )
+  return normalizeImageUrlForStorage(data.url)
+}
+
 export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     return error.response?.data?.message || error.message || 'Something went wrong'

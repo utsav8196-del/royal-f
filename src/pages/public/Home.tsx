@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { api } from '@/lib/api'
+import { api, uploadProfileImage } from '@/lib/api'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -12,10 +12,12 @@ import TestimonialCard from '@/components/public/TestimonialCard'
 import { Link, useNavigate } from 'react-router-dom'
 import PageMeta from '@/components/layout/PageMeta'
 import LoadingSpinner from '@/components/public/LoadingSpinner'
+import ResponsiveImage from '@/components/ui/ResponsiveImage'
 import { useAuth } from '@/context/AuthContext'
 import { getErrorMessage } from '@/lib/api'
+import { DEFAULT_PROFILE_IMAGE } from '@/lib/images'
 import toast from 'react-hot-toast'
-import { Loader2, Star } from 'lucide-react'
+import { Loader2, Star, Upload, X } from 'lucide-react'
 
 const container = {
   hidden: { opacity: 0 },
@@ -33,6 +35,8 @@ export default function Home() {
   const [reviewOpen, setReviewOpen] = useState(false)
   const [reviewMessage, setReviewMessage] = useState('')
   const [reviewRating, setReviewRating] = useState(5)
+  const [reviewImage, setReviewImage] = useState<File | null>(null)
+  const [reviewImagePreview, setReviewImagePreview] = useState(DEFAULT_PROFILE_IMAGE)
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
 
   useEffect(() => {
@@ -73,17 +77,36 @@ export default function Home() {
     setReviewOpen((open) => !open)
   }
 
+  const handleReviewImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please choose an image file.')
+      return
+    }
+    setReviewImage(file)
+    setReviewImagePreview(URL.createObjectURL(file))
+  }
+
+  const clearReviewImage = () => {
+    setReviewImage(null)
+    setReviewImagePreview(DEFAULT_PROFILE_IMAGE)
+  }
+
   const submitReview = async (event: FormEvent) => {
     event.preventDefault()
     setReviewSubmitting(true)
     try {
+      const image = reviewImage ? await uploadProfileImage(reviewImage) : DEFAULT_PROFILE_IMAGE
       const { data } = await api.post('/testimonials/student', {
         message: reviewMessage,
         rating: reviewRating,
+        image,
       })
       setTestimonials((items) => [data, ...items])
       setReviewMessage('')
       setReviewRating(5)
+      clearReviewImage()
       setReviewOpen(false)
       toast.success('Thanks! Your review has been added.')
     } catch (err) {
@@ -192,6 +215,41 @@ export default function Home() {
                   required
                   minLength={10}
                 />
+              </div>
+              <div className="mt-4">
+                <Label>Profile Image</Label>
+                <div className="mt-2 flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-4 sm:flex-row sm:items-center">
+                  <ResponsiveImage
+                    src={reviewImagePreview}
+                    alt="Review profile preview"
+                    fallbackSrc={DEFAULT_PROFILE_IMAGE}
+                    className="h-20 w-20 shrink-0 rounded-full border border-slate-200 object-cover"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm text-slate-600">Upload a profile image for your review. If skipped, the default profile image will be used.</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Button type="button" variant="outline" asChild>
+                        <label htmlFor="review-profile-image" className="cursor-pointer">
+                          <Upload className="h-4 w-4" />
+                          Choose Image
+                        </label>
+                      </Button>
+                      {reviewImage && (
+                        <Button type="button" variant="outline" onClick={clearReviewImage}>
+                          <X className="h-4 w-4" />
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    <input
+                      id="review-profile-image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleReviewImageChange}
+                      className="sr-only"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="mt-4">
                 <Label>Rating</Label>
